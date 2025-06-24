@@ -1,0 +1,24 @@
+{
+  "name": "foultarnished",
+  "version": "1.0.0",
+  "description": "Repositório destinado ao Projeto da Disciplina de Princípios de Desenvolvimento Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wanderhank/FoulTarnished.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wanderhank/FoulTarnished/issues"
+  },
+  "homepage": "https://github.com/wanderhank/FoulTarnished#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
