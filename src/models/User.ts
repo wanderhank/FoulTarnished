@@ -20,7 +20,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
 }
 
 
-// Inicialize o modelo com os campos no banco
 User.init(
     {
         id: {
