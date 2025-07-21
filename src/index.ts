@@ -4,6 +4,7 @@ import  sequelize from "./config/database";
 import UserRoute from "./routes/UserRoute";
 import AdminRoute from "./routes/AdminRoute";
 import WeaponRoute from "./routes/WeaponRoute";
+import ShieldRoute from "./routes/ShieldRoute";
 
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(UserRoute);
 app.use(AdminRoute);
 app.use(WeaponRoute);
+app.use(ShieldRoute)
 
 sequelize.sync({ force: true }).then(() => {
     console.log("Banco de dados conectado!");
