@@ -11,6 +11,10 @@ export class UserRepository {
         return await User.findByPk(id);
     }
 
+    async getUserByEmail(email: string) {
+        return await  User.findOne( {where: {email}})
+    }
+
     async getAllUsers() {
         return await User.findAll();
     }
@@ -29,5 +33,7 @@ export class UserRepository {
         }
         return resp;
     }
+
+
 }
 

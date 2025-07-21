@@ -22,8 +22,8 @@ class userController {
 
             return response.status(500).json({ error: "Erro ao buscar usuário" });
         }
-        // return response.status(200).json({msg: " chegamos aqui"})
     }
+
 
     async getAllUsers(response: Response): Promise<Response> {
         try {
