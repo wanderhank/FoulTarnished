@@ -49,4 +49,11 @@ Admin.init(
         tableName: 'admins',
         modelName: 'Admin'
     }
+
+
 );
+
+
+export const findAdminByEmail = async (email: string): Promise<Admin | null> => {
+    return await Admin.findOne({where: { email }})
+}

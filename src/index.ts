@@ -5,6 +5,8 @@ import UserRoute from "./routes/UserRoute";
 import AdminRoute from "./routes/AdminRoute";
 import WeaponRoute from "./routes/WeaponRoute";
 import ShieldRoute from "./routes/ShieldRoute";
+import authRoute from "./routes/AuthRoute";
+import {authenticate} from "./middlewares/authMiddleware";
 
 
 dotenv.config();
@@ -15,7 +17,12 @@ app.use(express.json());
 app.use(UserRoute);
 app.use(AdminRoute);
 app.use(WeaponRoute);
-app.use(ShieldRoute)
+app.use(ShieldRoute);
+app.use(authRoute);
+
+app.get('/protected', authenticate, (req, res) => {
+    res.status(200).json({ message: 'You have access to this protected route' });
+});
 
 sequelize.sync({ force: true }).then(() => {
     console.log("Banco de dados conectado!");

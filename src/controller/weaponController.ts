@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import WeaponService from "../services/weaponService";
-import {authAdmin, Credencial} from "../utils/auth";
 
 export class WeaponController {
 
     async createWeapon(req: Request, res: Response) {
         try {
-            const authorized = await auth(req);
-            if (!authorized) return res.status(401).json({error: "Não Autorizado"});
+
             const data = req.body;
 
             const existing = await WeaponService.getWeaponById(data.id);
@@ -49,7 +47,6 @@ export class WeaponController {
 
     async updateWeapon(req: Request, res: Response) {
         try {
-            if (!auth(req)) return res.status(401).json({error: "Não Autorizado"})
             const id = req.params.id;
             const data = req.body;
 
@@ -66,7 +63,6 @@ export class WeaponController {
     async deleteWeapon(req: Request, res: Response) {
         try {
 
-            if (!auth(req)) return res.status(401).json({error: "Não Autorizado"})
             const success = await WeaponService.deleteWeapon(req.params.id);
             if (!success) {
                 return res.status(404).json({ error: "Weapon não encontrado." });
@@ -80,20 +76,6 @@ export class WeaponController {
 
 }
 
-function auth(req: Request): Promise<boolean> {
-    const emailHeader = req.headers["email"];
-    const passwordHeader = req.headers["password"];
 
-    const email = Array.isArray(emailHeader) ? emailHeader[0] : emailHeader;
-    const password = Array.isArray(passwordHeader) ? passwordHeader[0] : passwordHeader;
-
-    if (!email || !password) {
-        return Promise.resolve(false);
-    }
-
-    const credencial: Credencial = { email, password };
-
-    return authAdmin(credencial);
-}
 
 export default new WeaponController();

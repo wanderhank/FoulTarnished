@@ -1,14 +1,9 @@
 import { Request, Response } from "express";
 import ShieldService from "../services/shieldService";
-import { authAdmin, Credencial } from "../utils/auth";
 
 export class ShieldController {
     async createShield(req: Request, res: Response) {
         try {
-            const authorized = await auth(req);
-            if (!authorized)
-                return res.status(401).json({ error: "Não Autorizado" });
-
             const data = req.body;
 
             const existing = await ShieldService.getShieldById(data.id);
@@ -51,8 +46,7 @@ export class ShieldController {
 
     async updateShield(req: Request, res: Response) {
         try {
-            if (!(await auth(req)))
-                return res.status(401).json({ error: "Não Autorizado" });
+
 
             const id = req.params.id;
             const data = req.body;
@@ -69,8 +63,7 @@ export class ShieldController {
 
     async deleteShield(req: Request, res: Response) {
         try {
-            if (!(await auth(req)))
-                return res.status(401).json({ error: "Não Autorizado" });
+
 
             const success = await ShieldService.deleteShield(req.params.id);
             if (!success) {
@@ -83,21 +76,6 @@ export class ShieldController {
     }
 }
 
-function auth(req: Request): Promise<boolean> {
-    const emailHeader = req.headers["email"];
-    const passwordHeader = req.headers["password"];
 
-    const email = Array.isArray(emailHeader) ? emailHeader[0] : emailHeader;
-    const password = Array.isArray(passwordHeader)
-        ? passwordHeader[0]
-        : passwordHeader;
-
-    if (!email || !password) {
-        return Promise.resolve(false);
-    }
-
-    const credencial: Credencial = { email, password };
-    return authAdmin(credencial);
-}
 
 export default new ShieldController();

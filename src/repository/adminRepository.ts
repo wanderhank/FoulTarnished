@@ -31,4 +31,9 @@ export class AdminRepository {
         }
         return false;
     }
+
+    async findByEmail(email: string) {
+        return await Admin.findOne({ where: { email } });
+    }
+
 }
