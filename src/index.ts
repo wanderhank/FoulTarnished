@@ -7,6 +7,9 @@ import WeaponRoute from "./routes/WeaponRoute";
 import ShieldRoute from "./routes/ShieldRoute";
 import authRoute from "./routes/AuthRoute";
 import {authenticate} from "./middlewares/authMiddleware";
+import TalismanRoute from "./routes/TalismanRoute";
+import ArmorRoute from "./routes/ArmorRoute";
+import BuildRoute from "./routes/BuildRoute";
 
 
 dotenv.config();
@@ -19,6 +22,9 @@ app.use(AdminRoute);
 app.use(WeaponRoute);
 app.use(ShieldRoute);
 app.use(authRoute);
+app.use(TalismanRoute);
+app.use(ArmorRoute);
+app.use(BuildRoute);
 
 app.get('/protected', authenticate, (req, res) => {
     res.status(200).json({ message: 'You have access to this protected route' });

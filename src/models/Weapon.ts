@@ -42,7 +42,6 @@ export class Weapon extends Model<WeaponAttributes, WeaponCreationAttributes>
     public requiredAttributes!: AttributeAmount[];
     public scalesWith!: AttributeScaling[];
 
-
 }
 
 Weapon.init(

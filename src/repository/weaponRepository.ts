@@ -1,5 +1,5 @@
 import { Weapon } from "../models/Weapon";
-import {User} from "../models/User";
+
 
 export class WeaponRepository {
     async createWeapon(data: Partial<Weapon>): Promise<Weapon> {

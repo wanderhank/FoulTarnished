@@ -1,4 +1,3 @@
-import dotenv from "dotenv"
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
 

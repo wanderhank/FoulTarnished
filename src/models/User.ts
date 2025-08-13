@@ -1,8 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from '../config/database';
 
-
-// Defina os atributos do modelo
 interface UserAttributes {
     id: number;
     name: string;

@@ -1,6 +1,5 @@
 #!/bin/sh
 #script para execução do Docker
-docker-compose build
-docker-compose down
-docker-compose up
+docker-compose build app
+docker-compose up -d
 docker ps
