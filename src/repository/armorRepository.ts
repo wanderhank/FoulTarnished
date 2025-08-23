@@ -10,7 +10,7 @@ export class ArmorRepository {
         return await Armor.findAll();
     }
 
-    async getByArmorId(id: string): Promise<Armor | null> {
+    async getArmorById(id: string): Promise<Armor | null> {
         return await Armor.findByPk(id);
     }
 

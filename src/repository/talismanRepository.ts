@@ -10,7 +10,7 @@ export class TalismanRepository {
         return await Talisman.findAll();
     }
 
-    async getByTalismanId(id: string): Promise<Talisman | null> {
+    async getTalismanById(id: string): Promise<Talisman | null> {
         return await Talisman.findByPk(id);
     }
 

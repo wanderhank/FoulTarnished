@@ -2,8 +2,8 @@ import {Admin} from "../models/Admin";
 
 
 export class AdminRepository {
-    async createAdmin(name: string, email: string, password: string) {
-        return await Admin.create({ name, email, password });
+    async createAdmin(data: Partial<Admin>) {
+        return await Admin.create(data as any);
     }
 
     async getAdminById(id: string) {

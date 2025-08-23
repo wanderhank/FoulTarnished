@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import  { AdminService } from "../services/adminService";
 import {AdminRepository} from "../repository/adminRepository";
+import {ShieldAlreadyExistsError} from "../errors/ShieldAlreadyExistsError";
+import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
+import {ShieldNotFoundError} from "../errors/ShieldNotFoundError";
+import {AdminNotFoundError} from "../errors/AdminNotFoundError";
 
 
 export class AdminController {
@@ -9,30 +13,30 @@ export class AdminController {
 
     async createAdmin(req: Request, res: Response) {
         try {
-            const { name, email, password } = req.body;
-
-            const existing = await this.adminService.getAdminByEmail(email);
-            if (existing) {
-                return res.status(409).json({ error: "E-mail já está em uso." });
+            const data = req.body;
+            const admin = await this.adminService.createAdminCrypt(data);
+            return res.status(201).json(admin);
+        } catch (error: any) {
+            if (error instanceof ShieldAlreadyExistsError) {
+                return res.status(error.statusCode).json({ error: error.message });
+            }
+            if (error instanceof RequiredFieldsAreMissingError) {
+                return res.status(error.statusCode).json({ error: error.message });
             }
 
-            const admin = await this.adminService.createAdminCrypt(name, email, password);
-            return res.status(201).json(admin);
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({ msg: "Erro ao criar admin.", error:error });
+            return res.status(500).json({erro: error});
         }
     }
 
     async getAdminById(req: Request, res: Response) {
         try {
             const admin = await this.adminService.getAdminById(req.params.id);
-            if (!admin) {
-                return res.status(404).json({ error: "Admin não encontrado." });
-            }
             return res.status(200).json(admin);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao buscar admin." });
+        } catch (error: any) {
+            if (error instanceof AdminNotFoundError) {
+                return res.status(error.statusCode).json({ error: error.message });
+            }
+            return res.status(500).json({ error: "Erro ao buscar administrador." });
         }
     }
 
@@ -40,8 +44,8 @@ export class AdminController {
         try {
             const admins = await this.adminService.getAllAdmins();
             return res.status(200).json(admins);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao buscar admins." });
+        } catch (error: any) {
+            return res.status(500).json({ error: "Erro ao buscar administrador." });
         }
     }
 
@@ -52,24 +56,25 @@ export class AdminController {
             const data = req.body;
 
             const updated = await this.adminService.updateAdmin(id, data);
-            if (!updated) {
-                return res.status(404).json({ error: "Admin não encontrado." });
-            }
             return res.status(200).json(updated);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao atualizar admin." });
+        } catch (error: any) {
+            if  (error instanceof AdminNotFoundError) {
+                return res.status(error.statusCode).json({error: error.message})
+            }
+            return res.status(500).json({ error: "Erro ao atualizar administrador." });
         }
     }
 
     async deleteAdmin(req: Request, res: Response) {
         try {
             const success = await this.adminService.deleteAdmin(req.params.id);
-            if (!success) {
-                return res.status(404).json({ error: "Admin não encontrado." });
-            }
+
             return res.status(200).json({ message: "Admin excluído com sucesso." });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao excluir admin." });
+        } catch (error: any) {
+            if (error instanceof AdminNotFoundError) {
+                return res.status(error.statusCode).json({error: error.message})
+            }
+            return res.status(500).json({ error: "Erro ao excluir administrador." });
         }
     }
 

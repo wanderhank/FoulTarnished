@@ -5,46 +5,52 @@ import {ArmorNotFoundError} from "../errors/ArmorNotFoundError";
 import {MissingArmorFieldError} from "../errors/MissingArmorFieldError";
 import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
 
-const armorRepository = new ArmorRepository();
 
-class ArmorService {
+export class ArmorService {
+
+    private repo: ArmorRepository;
+
+    constructor(repo: ArmorRepository) {
+        this.repo = repo;
+    }
+
     async createArmor(data: Partial<Armor>) {
-        const existing = await armorRepository.getArmorByName(<string>data.name);
+        const existing = await this.repo.getArmorByName(<string>data.name);
         if (existing) {
             throw new ArmorAlreadyExistsError();
         }
         if (hasEmptyRequiredFields(data)) {
             throw new RequiredFieldsAreMissingError();
         }
-        return await armorRepository.createArmor(data);
+        return await this.repo.createArmor(data);
     }
 
     async getArmorById(id: string) {
-        const armor = await armorRepository.getByArmorId(id);
+        const armor = await this.repo.getArmorById(id);
         if (!armor) {
             throw new ArmorNotFoundError();
         }
-        return await armorRepository.getByArmorId(id);
+        return await this.repo.getArmorById(id);
     }
 
     async getAllArmors() {
-        return await armorRepository.getAllArmors();
+        return await this.repo.getAllArmors();
     }
 
     async updateArmor(id: string, data: Partial<Armor>) {
-        const armor = await armorRepository.getByArmorId(id);
+        const armor = await this.repo.getArmorById(id);
         if (!armor) {
             throw new ArmorNotFoundError();
         }
-        return await armorRepository.updateArmor(id, data);
+        return await this.repo.updateArmor(id, data);
     }
 
     async deleteArmor(id: string) {
-        const success = await armorRepository.deleteArmor(id);
+        const success = await this.repo.deleteArmor(id);
         if (!success) {
             throw new ArmorNotFoundError();
         }
-        return await armorRepository.deleteArmor(id);
+        return await this.repo.deleteArmor(id);
     }
 }
 
@@ -58,4 +64,4 @@ function hasEmptyRequiredFields(data: Partial<Armor>): boolean {
 }
 
 
-export default new ArmorService();
+export default new ArmorService(new ArmorRepository());

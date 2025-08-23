@@ -32,7 +32,7 @@ export class TalismanController {
 
     async getAllTalismans(res: Response) {
         try {
-            const armors = await TalismanService.getAllArmours();
+            const armors = await TalismanService.getAllTalismans();
             return res.status(200).json(armors);
         } catch (error: any) {
             return res.status(500).json({ error: "Erro ao buscar talismã." });

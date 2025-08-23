@@ -18,7 +18,6 @@ export class ArmorController {
             if (error instanceof RequiredFieldsAreMissingError) {
                 return res.status(error.statusCode).json({ error: error.message });
             }
-
             return res.status(500).json({erro: error});
         }
     }

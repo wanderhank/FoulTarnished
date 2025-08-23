@@ -1,28 +1,66 @@
-import { WeaponRepository } from "../repository/weaponRepository";
-import { Weapon } from "../models/Weapon";
+import {WeaponRepository} from "../repository/weaponRepository";
+import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
+import {Weapon} from "../models/Weapon";
+import {WeaponAlreadyExistsError} from "../errors/WeaponAlreadyExistsError";
+import {WeaponNotFoundError} from "../errors/WeaponNotFoundError";
 
-const weaponRepository = new WeaponRepository();
 
-class WeaponService {
+
+export class WeaponService {
+
+    private repo: WeaponRepository
+
+    constructor(repo: WeaponRepository) {
+        this.repo = repo;
+    }
+
     async createWeapon(data: Partial<Weapon>) {
-        return await weaponRepository.createWeapon(data);
+        const existing = await this.repo.getWeaponByName(<string>data.name);
+        if (existing) {
+            throw new WeaponAlreadyExistsError();
+        }
+        if (hasEmptyRequiredFields(data)) {
+            throw new RequiredFieldsAreMissingError();
+        }
+        return await this.repo.createWeapon(data);
     }
 
     async getWeaponById(id: string) {
-        return await weaponRepository.getByWeaponId(id);
+        const armor = await this.repo.getWeaponById(id);
+        if (!armor) {
+            throw new WeaponNotFoundError();
+        }
+        return await this.repo.getWeaponById(id);
     }
 
     async getAllWeapons() {
-        return await weaponRepository.getAllWeapons();
+        return await this.repo.getAllWeapons();
     }
 
     async updateWeapon(id: string, data: Partial<Weapon>) {
-        return await weaponRepository.updateWeapon(id, data);
+        const shield = await this.repo.getWeaponById(id);
+        if (!shield) {
+            throw new WeaponNotFoundError();
+        }
+        return await this.repo.updateWeapon(id, data);
     }
 
     async deleteWeapon(id: string) {
-        return await weaponRepository.deleteWeapon(id);
+        const success = await this.repo.deleteWeapon(id);
+        if (!success) {
+            throw new WeaponNotFoundError();
+        }
+        return await this.repo.deleteWeapon(id);
     }
 }
 
-export default new WeaponService();
+function hasEmptyRequiredFields(data: Partial<Weapon>): boolean {
+
+    const requiredKeys: (keyof Weapon)[] = ["name", "image", "description", "category", "weight", "attack", "defence", "requiredAttributes", "scalesWith"];
+    return requiredKeys.some(key => {
+        const value = data[key];
+        return value === undefined || value === null || value === "";
+    });
+}
+
+export default new WeaponService(new WeaponRepository());

@@ -1,4 +1,5 @@
 import { Shield } from "../models/Shield";
+import {Armor} from "../models/Armor";
 
 export class ShieldRepository {
     async createShield(data: Partial<Shield>): Promise<Shield> {
@@ -27,5 +28,9 @@ export class ShieldRepository {
 
         await shield.destroy();
         return true;
+    }
+
+    async getShieldByName(name: string): Promise<Shield | null> {
+        return await Shield.findOne({where: {name: name}})
     }
 }

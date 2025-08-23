@@ -1,81 +1,75 @@
 import { Request, Response } from "express";
 import ShieldService from "../services/shieldService";
+import {ShieldAlreadyExistsError} from "../errors/ShieldAlreadyExistsError";
+import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
+import {ShieldNotFoundError} from "../errors/ShieldNotFoundError";
 
 export class ShieldController {
+
     async createShield(req: Request, res: Response) {
         try {
             const data = req.body;
-
-            const existing = await ShieldService.getShieldById(data.id);
-            if (existing) {
-                return res
-                    .status(409)
-                    .json({ error: "Shield com esse ID já existe." });
+            const armor = await ShieldService.createShield(data);
+            return res.status(201).json(armor);
+        } catch (error: any) {
+            if (error instanceof ShieldAlreadyExistsError) {
+                return res.status(error.statusCode).json({ error: error.message });
+            }
+            if (error instanceof RequiredFieldsAreMissingError) {
+                return res.status(error.statusCode).json({ error: error.message });
             }
 
-            const shield = await ShieldService.createShield(data);
-            return res.status(201).json(shield);
-        } catch (error) {
-            if (error instanceof Error) {
-                return res.status(500).json({ erro: error.message });
-            }
-            return res.status(500).json({ erro: error });
+            return res.status(500).json({erro: error});
         }
     }
 
     async getShieldById(req: Request, res: Response) {
         try {
-            const shield = await ShieldService.getShieldById(req.params.id);
-            if (!shield) {
-                return res.status(404).json({ error: "Shield não encontrado." });
+            const armor = await ShieldService.getShieldById(req.params.id);
+            return res.status(200).json(armor);
+        } catch (error: any) {
+            if (error instanceof ShieldNotFoundError) {
+                return res.status(error.statusCode).json({ error: error.message });
             }
-            return res.status(200).json(shield);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao buscar shield." });
+            return res.status(500).json({ error: "Erro ao buscar escudo." });
         }
     }
 
     async getAllShields(res: Response) {
         try {
-            const shields = await ShieldService.getAllShields();
-            return res.status(200).json(shields);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao buscar shields." });
+            const armors = await ShieldService.getAllShields();
+            return res.status(200).json(armors);
+        } catch (error: any) {
+            return res.status(500).json({ error: "Erro ao buscar escudo." });
         }
     }
 
     async updateShield(req: Request, res: Response) {
         try {
-
-
             const id = req.params.id;
             const data = req.body;
 
             const updated = await ShieldService.updateShield(id, data);
-            if (!updated) {
-                return res.status(404).json({ error: "Shield não encontrado." });
-            }
             return res.status(200).json(updated);
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao atualizar shield." });
+        } catch (error: any) {
+            if  (error instanceof ShieldNotFoundError) {
+                return res.status(error.statusCode).json({error: error.message})
+            }
+            return res.status(500).json({ error: "Erro ao atualizar escudo." });
         }
     }
 
     async deleteShield(req: Request, res: Response) {
         try {
-
-
             const success = await ShieldService.deleteShield(req.params.id);
-            if (!success) {
-                return res.status(404).json({ error: "Shield não encontrado." });
+            return res.status(200).json({ message: "Escudo excluído com sucesso." });
+        } catch (error: any) {
+            if (error instanceof ShieldNotFoundError) {
+                return res.status(error.statusCode).json({error: error.message})
             }
-            return res.status(200).json({ message: "Shield excluído com sucesso." });
-        } catch (error) {
-            return res.status(500).json({ error: "Erro ao excluir shield." });
+            return res.status(500).json({ error: "Erro ao excluir escudo." });
         }
     }
 }
-
-
 
 export default new ShieldController();

@@ -1,4 +1,5 @@
 import { Weapon } from "../models/Weapon";
+import {Shield} from "../models/Shield";
 
 
 export class WeaponRepository {
@@ -10,7 +11,7 @@ export class WeaponRepository {
         return await Weapon.findAll();
     }
 
-    async getByWeaponId(id: string): Promise<Weapon | null> {
+    async getWeaponById(id: string): Promise<Weapon | null> {
         return await Weapon.findByPk(id);
     }
 
@@ -30,6 +31,10 @@ export class WeaponRepository {
             resp = true;
         }
         return resp;
+    }
+
+    async getWeaponByName(name: string): Promise<Weapon | null> {
+        return await Weapon.findOne({where: {name: name}})
     }
 
 }

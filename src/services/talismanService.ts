@@ -4,47 +4,50 @@ import {TalismanAlreadyExistsError} from "../errors/TalismanAlreadyExistsError";
 import {TalismanNotFoundError} from "../errors/TalismanNotFoundError";
 import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
 
+export class TalismanService {
 
-const talismanRepository = new TalismanRepository();
+    private repo: TalismanRepository;
 
-class TalismanService {
+    constructor(repo: TalismanRepository) {
+        this.repo = repo;
+    }
     async createTalisman(data: Partial<Talisman>) {
-        const existing = await talismanRepository.getTalismanByName(<string>data.name);
+        const existing = await this.repo.getTalismanByName(<string>data.name);
         if (existing) {
             throw new TalismanAlreadyExistsError();
         }
         if (hasEmptyRequiredFields(data)) {
             throw new RequiredFieldsAreMissingError();
         }
-        return await talismanRepository.createTalisman(data);
+        return await this.repo.createTalisman(data);
     }
 
     async getTalismanById(id: string) {
-        const talisman = await talismanRepository.getByTalismanId(id);
+        const talisman = await this.repo.getTalismanById(id);
         if (!talisman) {
             throw new TalismanNotFoundError();
         }
-        return await talismanRepository.getByTalismanId(id);
+        return await this.repo.getTalismanById(id);
     }
 
-    async getAllArmours() {
-        return await talismanRepository.getAllTalismans();
+    async getAllTalismans() {
+        return await this.repo.getAllTalismans();
     }
 
     async updateTalisman(id: string, data: Partial<Talisman>) {
-        const talisman = await talismanRepository.getByTalismanId(id);
+        const talisman = await this.repo.getTalismanById(id);
         if (!talisman) {
             throw new TalismanNotFoundError();
         }
-        return await talismanRepository.updateTalisman(id, data);
+        return await this.repo.updateTalisman(id, data);
     }
 
     async deleteTalisman(id: string) {
-        const success = await talismanRepository.deleteTalisman(id);
+        const success = await this.repo.deleteTalisman(id);
         if (!success) {
             throw new TalismanNotFoundError();
         }
-        return await talismanRepository.deleteTalisman(id);
+        return await this.repo.deleteTalisman(id);
     }
 }
 function hasEmptyRequiredFields(data: Partial<Talisman>): boolean {
@@ -56,5 +59,4 @@ function hasEmptyRequiredFields(data: Partial<Talisman>): boolean {
     });
 }
 
-
-export default new TalismanService();
+export default new TalismanService(new TalismanRepository());
