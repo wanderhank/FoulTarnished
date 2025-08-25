@@ -5,7 +5,7 @@
   "description": "Repositório destinado ao Projeto da Disciplina de Princípios de Desenvolvimento Web",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest --runInBand ...",
+    "test": "jest --runInBand ... --coverage",
     "build": "tsc",
     "dev": "ts-node  src/index.ts",
     "start": "node server.js"
