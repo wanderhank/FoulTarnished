@@ -16,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'Usuário ou senha inválidos' });
         }
         // Gera um token JWT
-        const token = generateToken(parseInt(user.id), user.email);
+        const token = generateToken(parseInt(user.id), user.email, user.role);
         res.status(200).json({ message: 'Login bem-sucedido', token });
     } catch (err) {
         res.status(500).json({ message: 'Erro ao fazer login', error: err });

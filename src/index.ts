@@ -1,7 +1,6 @@
 import * as express from "express";
 import * as dotenv from "dotenv";
 import  sequelize from "./config/database";
-import UserRoute from "./routes/UserRoute";
 import AdminRoute from "./routes/AdminRoute";
 import WeaponRoute from "./routes/WeaponRoute";
 import ShieldRoute from "./routes/ShieldRoute";
@@ -16,7 +15,6 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(UserRoute);
 app.use(AdminRoute);
 app.use(WeaponRoute);
 app.use(ShieldRoute);

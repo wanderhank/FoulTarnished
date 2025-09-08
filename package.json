@@ -1,7 +1,7 @@
 {
   "name": "foultarnished",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "Repositório destinado ao Projeto da Disciplina de Princípios de Desenvolvimento Web",
   "main": "lib/index.js",
   "scripts": {

@@ -5,6 +5,7 @@ import {ShieldAlreadyExistsError} from "../errors/ShieldAlreadyExistsError";
 import {RequiredFieldsAreMissingError} from "../errors/RequiredFieldsAreMissingError";
 import {ShieldNotFoundError} from "../errors/ShieldNotFoundError";
 import {AdminNotFoundError} from "../errors/AdminNotFoundError";
+import {AdminAlreadyExistsError} from "../errors/AdminAlreadyExistsError";
 
 
 export class AdminController {
@@ -17,7 +18,7 @@ export class AdminController {
             const admin = await this.adminService.createAdminCrypt(data);
             return res.status(201).json(admin);
         } catch (error: any) {
-            if (error instanceof ShieldAlreadyExistsError) {
+            if (error instanceof AdminAlreadyExistsError) {
                 return res.status(error.statusCode).json({ error: error.message });
             }
             if (error instanceof RequiredFieldsAreMissingError) {

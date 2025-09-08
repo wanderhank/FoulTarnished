@@ -7,7 +7,7 @@ import {Shield} from "../models/Shield";
 
 const router = Router();
 
-router.post("/talismans",authenticate, (request, response) => {talismanController.createTalisman(request, response)});
+router.post("/talismans",authenticate,authorize, (request, response) => {talismanController.createTalisman(request, response)});
 
 router.get("/talismans/:id",  (request, response) => {talismanController.getTalismanById(request, response)});
 

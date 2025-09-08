@@ -3,11 +3,14 @@ import { Model, DataTypes, Optional } from 'sequelize';
 import sequelize from "../config/database";
 
 
+export type role = "User" | "Admin";
+
 interface AdminAttributes {
     id: string;
     name: string;
     email: string;
-    password: string; // hash da senha
+    password: string;
+    role: role;
 }
 
 interface AdminCreationAttributes extends Optional<AdminAttributes, 'id'> {}
@@ -17,6 +20,7 @@ export class Admin extends Model<AdminAttributes, AdminCreationAttributes> imple
     public name!: string;
     public email!: string;
     public password!: string;
+    public role!: role;
 
 }
 
@@ -42,8 +46,14 @@ Admin.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        role: {
+            type: DataTypes.ENUM("User", "Admin"),
+            allowNull: false,
+            defaultValue: "User",
         }
     },
+
     {
         sequelize,
         tableName: 'admins',

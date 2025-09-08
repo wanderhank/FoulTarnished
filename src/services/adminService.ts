@@ -41,7 +41,7 @@ export class AdminService {
             throw new RequiredFieldsAreMissingError();
         }
         const hashedPassword = await bcrypt.hash(<string>data.password, 10);
-
+        data.password = hashedPassword;
         return await this.adminRepository.createAdmin(data);
     }
 
