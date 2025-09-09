@@ -1,21 +1,19 @@
 import sequelize from "../config/database";
-import {Association, DataTypes, HasManyGetAssociationsMixin, Model, Optional} from "sequelize";
-import {Armor} from "./Armor";
-import { Talisman } from "./Talisman";
-import {BuildArmor} from "./BuildArmor";
-import {BuildTalisman} from "./BuildTalisman";
-import {Weapon} from "./Weapon";
-import {Shield} from "./Shield";
+import {DataTypes, Model, Optional} from "sequelize";
+import {Admin} from "./Admin";
+
 
 interface BuildAttributes {
     id: number;
     name: string;
     description: string;
 
-    equipment1Id: number;
-    equipment1Type: "weapon" | "shield";
-    equipment2Id: number;
-    equipment2Type: "weapon" | "shield";
+    weaponOneId: number;
+    weaponTwoId: number;
+    helmId: number;
+    chestArmorId: number;
+    legArmorId: number;
+    gauntletId: number;
 }
 
 interface BuildCreationAttributes extends Optional<BuildAttributes, "id"> {}
@@ -25,18 +23,18 @@ export class Build extends Model<BuildAttributes, BuildCreationAttributes> imple
     public name!: string;
     public description!: string;
 
-    public equipment1Id!: number;
-    public equipment1Type!: "weapon" | "shield";
-    public equipment2Id!: number;
-    public equipment2Type!: "weapon" | "shield";
+    public weaponOneId!: number;
+    public weaponTwoId!: number;
+    public helmId!: number;
+    public chestArmorId!: number;
+    public legArmorId!: number;
+    public gauntletId!: number;
+    public talismanOneId!: number;
+    public talismanTwoId!: number;
+    public talismanThreeId!: number;
+    public talismanFourId!: number;
 
-    public readonly armors?: Armor[];
-    public readonly talismans?: Talisman[];
 
-    public static associations: {
-        armors: Association<Build, Armor>;
-        talismans: Association<Build, Talisman>;
-    };
 }
 
 Build.init(
@@ -44,10 +42,48 @@ Build.init(
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         name: { type: DataTypes.STRING, allowNull: false },
         description: { type: DataTypes.TEXT, allowNull: false },
-        equipment1Id: { type: DataTypes.INTEGER, allowNull: false },
-        equipment1Type: { type: DataTypes.ENUM("weapon", "shield"), allowNull: false },
-        equipment2Id: { type: DataTypes.INTEGER, allowNull: false },
-        equipment2Type: { type: DataTypes.ENUM("weapon", "shield"), allowNull: false }
+        weaponOneId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
+        weaponTwoId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
+        helmId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
+        chestArmorId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
+        legArmorId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
+        gauntletId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+            },
+        },
     },
     {
         sequelize,
@@ -56,15 +92,7 @@ Build.init(
     }
 );
 
-Build.belongsToMany(Armor, { through: BuildArmor, foreignKey: "buildId", as: "armors" });
-Armor.belongsToMany(Build, { through: BuildArmor, foreignKey: "armorId", as: "builds" });
+Build.belongsTo(Admin, {foreignKey: 'admin_id', as: 'admin'});
 
-Build.belongsToMany(Talisman, { through: BuildTalisman, foreignKey: "buildId", as: "talismans" });
-Talisman.belongsToMany(Build, { through: BuildTalisman, foreignKey: "talismanId", as: "builds" });
 
-Build.hasOne(Weapon, { foreignKey: "id", sourceKey: "equipment1Id", constraints: false, as: "equipment1Weapon" });
-Build.hasOne(Shield, { foreignKey: "id", sourceKey: "equipment1Id", constraints: false, as: "equipment1Shield" });
-
-Build.hasOne(Weapon, { foreignKey: "id", sourceKey: "equipment2Id", constraints: false, as: "equipment2Weapon" });
-Build.hasOne(Shield, { foreignKey: "id", sourceKey: "equipment2Id", constraints: false, as: "equipment2Shield" });
 

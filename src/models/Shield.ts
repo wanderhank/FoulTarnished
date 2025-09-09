@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
+import {Build} from "./Build";
+import {Armor} from "./Armor";
 
 interface AttributeAmount {
     name: string;
@@ -92,3 +94,5 @@ Shield.init(
         modelName: "Shield"
     }
 );
+
+Shield.belongsTo(Build, {foreignKey: 'build_id', as: 'build'});

@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
+import {Build} from "./Build";
+import {Armor} from "./Armor";
 
 
 interface AttributeAmount {
@@ -94,3 +96,5 @@ Weapon.init(
         modelName: "Weapon"
     }
 );
+
+Weapon.belongsTo(Build, {foreignKey: 'build_id', as: 'build'});

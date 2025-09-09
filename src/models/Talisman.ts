@@ -1,5 +1,7 @@
 import {DataTypes, Model, Optional} from "sequelize";
 import sequelize from "../config/database";
+import {Build} from "./Build";
+import {Armor} from "./Armor";
 
 interface TalismanAttributes {
     id: string;
@@ -14,6 +16,7 @@ interface TalismanCreationAttributes extends Optional<TalismanAttributes, 'id'> 
 export class Talisman extends Model<TalismanAttributes, TalismanCreationAttributes>
     implements TalismanAttributes {
     public id!: string;
+
     public name!: string;
     public image!: string;
     public description!: string;
@@ -51,3 +54,5 @@ Talisman.init(
         modelName: "Talisman"
     }
 );
+
+Talisman.belongsTo(Build, {foreignKey: 'build_id', as: 'build'});

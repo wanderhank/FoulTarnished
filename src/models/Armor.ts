@@ -1,5 +1,7 @@
 import {DataTypes, Model, Optional} from "sequelize";
 import sequelize from "../config/database";
+import {Admin} from "./Admin";
+import {Build} from "./Build";
 
 interface DmgNegation {
     name: string;
@@ -101,3 +103,5 @@ Armor.init(
         modelName: "Armor"
     }
 );
+
+Armor.belongsTo(Build, {foreignKey: 'build_id', as: 'build'});
